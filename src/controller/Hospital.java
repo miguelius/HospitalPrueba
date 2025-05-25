@@ -6,6 +6,8 @@ import entity.Profesional;
 import entity.Receta;
 
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Hospital {
@@ -16,6 +18,9 @@ public class Hospital {
 
     public Hospital(String nombre) {
         this.nombre = nombre;
+        profesionales = new HashMap<>();
+        pacientes = new HashMap<>();
+        recetas = new ArrayList<>();
     }
 
     public Profesional registrarProfesional(String nombre, int matricula) {
@@ -38,25 +43,48 @@ public class Hospital {
 
     public Receta cargarReceta(Profesional profesional, Paciente paciente, Estudio[] estudios) {
         // si existe el profesional
+        if (!profesionales.containsKey(profesional.getMatricula())) {
+            throw new RuntimeException("Profesional no registrado.");
+        }
         // si existe el paciente
+        if (!pacientes.containsKey(paciente.getDni())) {
+            throw new RuntimeException("Paciente no registrado.");
+        }
         // agregar receta a la colección de recetas
-        new Receta(paciente, estudios);
+        Receta nuevaReceta = new Receta(profesional, paciente, estudios);
+        recetas.add(nuevaReceta);
+        return nuevaReceta;
+
     }
 
     public void procesar(Receta receta) {
         for (Receta rec : recetas) {
             if (rec.getIdReceta() == receta.getIdReceta()) {
-
+                // se puede validar que la receta no este procesada
+                rec.procesar();
             }
         }
     }
 
     public void mostrarRecetas() {
+        for (Receta rec : recetas) {
+            System.out.println(rec);
+        }
     }
 
     public void mostrarRecetasProcesadas() {
+        for (Receta rec : recetas){
+            if (rec.isProcesado()){
+                System.out.println(rec);
+            }
+        }
     }
 
     public void mostrarPacientesConEstudios(int minimoEstudiosRealizados) {
+        for (Receta rec : recetas) {
+            if (rec.isProcesado() && rec.getEstudios().length >= minimoEstudiosRealizados){
+                System.out.println(rec.getPaciente());
+            }
+        }
     }
 }

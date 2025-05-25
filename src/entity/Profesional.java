@@ -16,4 +16,9 @@ public class Profesional {
     public String getNombre() {
         return nombre;
     }
+
+    @Override
+    public String toString() {
+        return nombre + " [" + matricula +"]";
+    }
 }

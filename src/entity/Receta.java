@@ -5,10 +5,12 @@ public class Receta {
     private boolean procesado;
     private Estudio[] estudios;
     private Paciente paciente;
+    private Profesional profesional;
 
-    public Receta(Paciente paciente, Estudio[] estudios) {
+    public Receta(Profesional profesional, Paciente paciente, Estudio[] estudios) {
         this.paciente = paciente;
         this.estudios = estudios;
+        this.profesional = profesional;
     }
 
     public int getIdReceta() {
@@ -29,5 +31,22 @@ public class Receta {
 
     public void procesar() {
         procesado = true;
+        for (Estudio est : estudios){
+            est.realizar(paciente, profesional);
+        }
+    }
+
+    @Override
+    public String toString() {
+        String salida = "Receta " + idReceta +
+            "\n- Profesional:" + profesional + 
+            "\n- Paciente: " + paciente +
+            "\n- Estado: " + procesado +
+            "\n- Estudios: ";
+
+        for (Estudio est: estudios){
+            salida += "\n-" + est;
+        }
+        return salida;
     }
 }
